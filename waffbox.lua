@@ -72,8 +72,8 @@ end
 local requestsDisabled = true --getgenv and getgenv().DISABLE_RAYFIELD_REQUESTS
 local InterfaceBuild = '3K3W'
 local Release = "Build 1.68"
-local RayfieldFolder = "WaffBox"
-local ConfigurationFolder = RayfieldFolder.."/Configurations"
+local WaffBoxFolder = "WaffBox"
+local ConfigurationFolder = WaffBoxFolder.."/Configurations"
 local ConfigurationExtension = ".rfld"
 local settingsTable = {
 	General = {
@@ -135,9 +135,9 @@ local function loadSettings()
 
 	local success, result =	pcall(function()
 		task.spawn(function()
-			if isfolder and isfolder(RayfieldFolder) then
-				if isfile and isfile(RayfieldFolder..'/settings'..ConfigurationExtension) then
-					file = readfile(RayfieldFolder..'/settings'..ConfigurationExtension)
+			if isfolder and isfolder(WaffBoxFolder) then
+				if isfile and isfile(WaffBoxFolder..'/settings'..ConfigurationExtension) then
+					file = readfile(WaffBoxFolder..'/settings'..ConfigurationExtension)
 				end
 			end
 
@@ -263,7 +263,7 @@ if debugX then
 	warn('Moving on to continue initialisation')
 end
 
-local RayfieldLibrary = {
+local WaffBoxLibrary = {
 	Flags = {},
 	Theme = {
 		Default = {
@@ -659,7 +659,7 @@ local buildAttempts = 0
 local correctBuild = false
 local warned
 local globalLoaded
-local rayfieldDestroyed = false -- True when RayfieldLibrary:Destroy() is called
+local rayfieldDestroyed = false -- True when WaffBoxLibrary:Destroy() is called
 
 repeat
 	if WaffBox:FindFirstChild('Build') and WaffBox.Build.Value == InterfaceBuild then
@@ -753,11 +753,11 @@ local Debounce = false
 local searchOpen = false
 local Notifications = WaffBox.Notifications
 
-local SelectedTheme = RayfieldLibrary.Theme.Default
+local SelectedTheme = WaffBoxLibrary.Theme.Default
 
 local function ChangeTheme(Theme)
 	if typeof(Theme) == 'string' then
-		SelectedTheme = RayfieldLibrary.Theme[Theme]
+		SelectedTheme = WaffBoxLibrary.Theme[Theme]
 	elseif typeof(Theme) == 'table' then
 		SelectedTheme = Theme
 	end
@@ -938,7 +938,7 @@ local function LoadConfiguration(Configuration)
 	if not success then warn('WaffBox had an issue decoding the configuration file, please try delete the file and reopen WaffBox.') return end
 
 	-- Iterate through current UI elements' flags
-	for FlagName, Flag in pairs(RayfieldLibrary.Flags) do
+	for FlagName, Flag in pairs(WaffBoxLibrary.Flags) do
 		local FlagValue = Data[FlagName]
 
 		if (typeof(FlagValue) == 'boolean' and FlagValue == false) or FlagValue then
@@ -956,7 +956,7 @@ local function LoadConfiguration(Configuration)
 		else
 			warn("WaffBox | Unable to find '"..FlagName.. "' in the save file.")
 			print("The error above may not be an issue if new elements have been added or not been set values.")
-			--RayfieldLibrary:Notify({Title = "WaffBox Flags", Content = "WaffBox was unable to find '"..FlagName.. "' in the save file. Check sirius.menu/discord for help.", Image = 3944688398})
+			--WaffBoxLibrary:Notify({Title = "WaffBox Flags", Content = "WaffBox was unable to find '"..FlagName.. "' in the save file. Check sirius.menu/discord for help.", Image = 3944688398})
 		end
 	end
 
@@ -971,7 +971,7 @@ local function SaveConfiguration()
 	end
 
 	local Data = {}
-	for i, v in pairs(RayfieldLibrary.Flags) do
+	for i, v in pairs(WaffBoxLibrary.Flags) do
 		if v.Type == "ColorPicker" then
 			Data[i] = PackColor(v.Color)
 		else
@@ -1012,7 +1012,7 @@ local function SaveConfiguration()
 	end
 end
 
-function RayfieldLibrary:Notify(data) -- action e.g open messages
+function WaffBoxLibrary:Notify(data) -- action e.g open messages
 	task.spawn(function()
 
 		-- Notification Object Creation
@@ -1188,9 +1188,9 @@ local function Hide(notify: boolean?)
 	Debounce = true
 	if notify then
 		if useMobilePrompt then 
-			RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping 'Show'.", Duration = 7, Image = 4400697855})
+			WaffBoxLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping 'Show'.", Duration = 7, Image = 4400697855})
 		else
-			RayfieldLibrary:Notify({Title = "Interface Hidden", Content = `The interface has been hidden, you can unhide the interface by tapping {getSetting("General", "rayfieldOpen")}.`, Duration = 7, Image = 4400697855})
+			WaffBoxLibrary:Notify({Title = "Interface Hidden", Content = `The interface has been hidden, you can unhide the interface by tapping {getSetting("General", "rayfieldOpen")}.`, Duration = 7, Image = 4400697855})
 		end
 	end
 
@@ -1484,7 +1484,7 @@ local function saveSettings() -- Save settings to config file
 			end
 		end
 		if writefile then
-			writefile(RayfieldFolder..'/settings'..ConfigurationExtension, encoded)
+			writefile(WaffBoxFolder..'/settings'..ConfigurationExtension, encoded)
 		end
 	end
 end
@@ -1563,7 +1563,7 @@ end
 
 
 
-function RayfieldLibrary:CreateWindow(Settings)
+function WaffBoxLibrary:CreateWindow(Settings)
 	print('creating window')
 	if WaffBox:FindFirstChild('Loading') then
 		if getgenv and not getgenv().rayfieldCached then
@@ -1580,7 +1580,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 	if not correctBuild and not Settings.DisableBuildWarnings then
 		task.delay(3, 
 			function() 
-				RayfieldLibrary:Notify({Title = 'Build Mismatch', Content = 'WaffBox may encounter issues as you are running an incompatible interface version ('.. ((WaffBox:FindFirstChild('Build') and WaffBox.Build.Value) or 'No Build') ..').\n\nThis version of WaffBox is intended for interface build '..InterfaceBuild..'.\n\nTry rejoining and then run the script twice.', Image = 4335487866, Duration = 15})		
+				WaffBoxLibrary:Notify({Title = 'Build Mismatch', Content = 'WaffBox may encounter issues as you are running an incompatible interface version ('.. ((WaffBox:FindFirstChild('Build') and WaffBox.Build.Value) or 'No Build') ..').\n\nThis version of WaffBox is intended for interface build '..InterfaceBuild..'.\n\nTry rejoining and then run the script twice.', Image = 4335487866, Duration = 15})		
 			end)
 	end
 
@@ -1600,8 +1600,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 		end
 	end
 
-	if isfolder and not isfolder(RayfieldFolder) then
-		makefolder(RayfieldFolder)
+	if isfolder and not isfolder(WaffBoxFolder) then
+		makefolder(WaffBoxFolder)
 	end
 
 	-- Attempt to report an event to analytics
@@ -1674,11 +1674,11 @@ function RayfieldLibrary:CreateWindow(Settings)
 	Elements.Visible = false
 	LoadingFrame.Visible = true
 
-	if not Settings.DisableRayfieldPrompts then
+	if not Settings.DisableWaffBoxPrompts then
 		task.spawn(function()
 			while true do
 				task.wait(math.random(180, 600))
-				RayfieldLibrary:Notify({
+				WaffBoxLibrary:Notify({
 					Title = "WaffBox Interface",
 					Content = "Enjoying this UI library? Find it at sirius.menu/discord",
 					Duration = 7,
@@ -1722,11 +1722,11 @@ function RayfieldLibrary:CreateWindow(Settings)
 	end
 
 	if Settings.Discord and Settings.Discord.Enabled and not useStudio then
-		if isfolder and not isfolder(RayfieldFolder.."/Discord Invites") then
-			makefolder(RayfieldFolder.."/Discord Invites")
+		if isfolder and not isfolder(WaffBoxFolder.."/Discord Invites") then
+			makefolder(WaffBoxFolder.."/Discord Invites")
 		end
 
-		if isfile and not isfile(RayfieldFolder.."/Discord Invites".."/"..Settings.Discord.Invite..ConfigurationExtension) then
+		if isfile and not isfile(WaffBoxFolder.."/Discord Invites".."/"..Settings.Discord.Invite..ConfigurationExtension) then
 			if requestFunc then
 				pcall(function()
 					requestFunc({
@@ -1746,7 +1746,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			end
 
 			if Settings.Discord.RememberJoins then -- We do logic this way so if the developer changes this setting, the user still won't be prompted, only new users
-				writefile(RayfieldFolder.."/Discord Invites".."/"..Settings.Discord.Invite..ConfigurationExtension,"WaffBox RememberJoins is true for this invite, this invite will not ask you to join again")
+				writefile(WaffBoxFolder.."/Discord Invites".."/"..Settings.Discord.Invite..ConfigurationExtension,"WaffBox RememberJoins is true for this invite, this invite will not ask you to join again")
 			end
 		end
 	end
@@ -1757,8 +1757,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 			return
 		end
 
-		if isfolder and not isfolder(RayfieldFolder.."/Key System") then
-			makefolder(RayfieldFolder.."/Key System")
+		if isfolder and not isfolder(WaffBoxFolder.."/Key System") then
+			makefolder(WaffBoxFolder.."/Key System")
 		end
 
 		if typeof(Settings.KeySettings.Key) == "string" then Settings.KeySettings.Key = {Settings.KeySettings.Key} end
@@ -1780,9 +1780,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Settings.KeySettings.FileName = "No file name specified"
 		end
 
-		if isfile and isfile(RayfieldFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension) then
+		if isfile and isfile(WaffBoxFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension) then
 			for _, MKey in ipairs(Settings.KeySettings.Key) do
-				if string.find(readfile(RayfieldFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension), MKey) then
+				if string.find(readfile(WaffBoxFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension), MKey) then
 					Passthrough = true
 				end
 			end
@@ -1893,9 +1893,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 					KeyMain.Visible = false
 					if Settings.KeySettings.SaveKey then
 						if writefile then
-							writefile(RayfieldFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension, FoundKey)
+							writefile(WaffBoxFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension, FoundKey)
 						end
-						RayfieldLibrary:Notify({Title = "Key System", Content = "The key for this script has been saved successfully.", Image = 3605522284})
+						WaffBoxLibrary:Notify({Title = "Key System", Content = "The key for this script has been saved successfully.", Image = 3605522284})
 					end
 				else
 					if AttemptsRemaining == 0 then
@@ -1941,7 +1941,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 				TweenService:Create(KeyMain.NoteMessage, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 				TweenService:Create(KeyMain.Hide, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
 				task.wait(0.51)
-				RayfieldLibrary:Destroy()
+				WaffBoxLibrary:Destroy()
 				KeyUI:Destroy()
 			end)
 		else
@@ -2116,7 +2116,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			Button.Interact.MouseButton1Click:Connect(function()
 				local Success, Response = pcall(ButtonSettings.Callback)
-				-- Prevents animation from trying to play if the button's callback called RayfieldLibrary:Destroy()
+				-- Prevents animation from trying to play if the button's callback called WaffBoxLibrary:Destroy()
 				if rayfieldDestroyed then
 					return
 				end
@@ -2224,7 +2224,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 					TweenService:Create(ColorPicker.HexInput, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Position = UDim2.new(0, 17, 0, 73)}):Play()
 					TweenService:Create(ColorPicker.Interact, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(0.574, 0, 1, 0)}):Play()
 					TweenService:Create(Main.MainPoint, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
-					TweenService:Create(Main, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {ImageTransparency = SelectedTheme ~= RayfieldLibrary.Theme.Default and 0.25 or 0.1}):Play()
+					TweenService:Create(Main, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {ImageTransparency = SelectedTheme ~= WaffBoxLibrary.Theme.Default and 0.25 or 0.1}):Play()
 					TweenService:Create(Background, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 				else
 					opened = false
@@ -2384,7 +2384,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and ColorPickerSettings.Flag then
-					RayfieldLibrary.Flags[ColorPickerSettings.Flag] = ColorPickerSettings
+					WaffBoxLibrary.Flags[ColorPickerSettings.Flag] = ColorPickerSettings
 				end
 			end
 
@@ -2673,7 +2673,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and InputSettings.Flag then
-					RayfieldLibrary.Flags[InputSettings.Flag] = InputSettings
+					WaffBoxLibrary.Flags[InputSettings.Flag] = InputSettings
 				end
 			end
 
@@ -2991,7 +2991,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and DropdownSettings.Flag then
-					RayfieldLibrary.Flags[DropdownSettings.Flag] = DropdownSettings
+					WaffBoxLibrary.Flags[DropdownSettings.Flag] = DropdownSettings
 				end
 			end
 
@@ -3122,7 +3122,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and KeybindSettings.Flag then
-					RayfieldLibrary.Flags[KeybindSettings.Flag] = KeybindSettings
+					WaffBoxLibrary.Flags[KeybindSettings.Flag] = KeybindSettings
 				end
 			end
 
@@ -3149,7 +3149,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Toggle.Title.TextTransparency = 1
 			Toggle.Switch.BackgroundColor3 = SelectedTheme.ToggleBackground
 
-			if SelectedTheme ~= RayfieldLibrary.Theme.Default then
+			if SelectedTheme ~= WaffBoxLibrary.Theme.Default then
 				Toggle.Switch.Shadow.Visible = false
 			end
 
@@ -3276,7 +3276,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			if not ToggleSettings.Ext then
 				if Settings.ConfigurationSaving then
 					if Settings.ConfigurationSaving.Enabled and ToggleSettings.Flag then
-						RayfieldLibrary.Flags[ToggleSettings.Flag] = ToggleSettings
+						WaffBoxLibrary.Flags[ToggleSettings.Flag] = ToggleSettings
 					end
 				end
 			end
@@ -3285,7 +3285,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			WaffBox.Main:GetPropertyChangedSignal('BackgroundColor3'):Connect(function()
 				Toggle.Switch.BackgroundColor3 = SelectedTheme.ToggleBackground
 
-				if SelectedTheme ~= RayfieldLibrary.Theme.Default then
+				if SelectedTheme ~= WaffBoxLibrary.Theme.Default then
 					Toggle.Switch.Shadow.Visible = false
 				end
 
@@ -3318,7 +3318,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Slider.UIStroke.Transparency = 1
 			Slider.Title.TextTransparency = 1
 
-			if SelectedTheme ~= RayfieldLibrary.Theme.Default then
+			if SelectedTheme ~= WaffBoxLibrary.Theme.Default then
 				Slider.Main.Shadow.Visible = false
 			end
 
@@ -3459,12 +3459,12 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and SliderSettings.Flag then
-					RayfieldLibrary.Flags[SliderSettings.Flag] = SliderSettings
+					WaffBoxLibrary.Flags[SliderSettings.Flag] = SliderSettings
 				end
 			end
 
 			WaffBox.Main:GetPropertyChangedSignal('BackgroundColor3'):Connect(function()
-				if SelectedTheme ~= RayfieldLibrary.Theme.Default then
+				if SelectedTheme ~= WaffBoxLibrary.Theme.Default then
 					Slider.Main.Shadow.Visible = false
 				end
 
@@ -3546,9 +3546,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 	function Window.ModifyTheme(NewTheme)
 		local success = pcall(ChangeTheme, NewTheme)
 		if not success then
-			RayfieldLibrary:Notify({Title = 'Unable to Change Theme', Content = 'We are unable find a theme on file.', Image = 4400704299})
+			WaffBoxLibrary:Notify({Title = 'Unable to Change Theme', Content = 'We are unable find a theme on file.', Image = 4400704299})
 		else
-			RayfieldLibrary:Notify({Title = 'Theme Changed', Content = 'Successfully changed theme to '..(typeof(NewTheme) == 'string' and NewTheme or 'Custom Theme')..'.', Image = 4483362748})
+			WaffBoxLibrary:Notify({Title = 'Theme Changed', Content = 'Successfully changed theme to '..(typeof(NewTheme) == 'string' and NewTheme or 'Custom Theme')..'.', Image = 4483362748})
 		end
 	end
 
@@ -3572,16 +3572,16 @@ local function setVisibility(visibility: boolean, notify: boolean?)
 	end
 end
 
-function RayfieldLibrary:SetVisibility(visibility: boolean)
+function WaffBoxLibrary:SetVisibility(visibility: boolean)
 	setVisibility(visibility, false)
 end
 
-function RayfieldLibrary:IsVisible(): boolean
+function WaffBoxLibrary:IsVisible(): boolean
 	return not Hidden
 end
 
 local hideHotkeyConnection -- Has to be initialized here since the connection is made later in the script
-function RayfieldLibrary:Destroy()
+function WaffBoxLibrary:Destroy()
 	rayfieldDestroyed = true
 	hideHotkeyConnection:Disconnect()
 	WaffBox:Destroy()
@@ -3714,7 +3714,7 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 end
 
 
-function RayfieldLibrary:LoadConfiguration()
+function WaffBoxLibrary:LoadConfiguration()
 	local config
 
 	if debugX then
@@ -3741,15 +3741,15 @@ function RayfieldLibrary:LoadConfiguration()
 				end
 			else
 				notified = true
-				RayfieldLibrary:Notify({Title = "WaffBox Configurations", Content = "We couldn't enable Configuration Saving as you are not using software with filesystem support.", Image = 4384402990})
+				WaffBoxLibrary:Notify({Title = "WaffBox Configurations", Content = "We couldn't enable Configuration Saving as you are not using software with filesystem support.", Image = 4384402990})
 			end
 		end)
 
 		if success and loaded and not notified then
-			RayfieldLibrary:Notify({Title = "WaffBox Configurations", Content = "The configuration file for this script has been loaded from a previous session.", Image = 4384403532})
+			WaffBoxLibrary:Notify({Title = "WaffBox Configurations", Content = "The configuration file for this script has been loaded from a previous session.", Image = 4384403532})
 		elseif not success and not notified then
 			warn('WaffBox Configurations Error | '..tostring(result))
-			RayfieldLibrary:Notify({Title = "WaffBox Configurations", Content = "We've encountered an issue loading your configuration correctly.\n\nCheck the Developer Console for more information.", Image = 4384402990})
+			WaffBoxLibrary:Notify({Title = "WaffBox Configurations", Content = "We've encountered an issue loading your configuration correctly.\n\nCheck the Developer Console for more information.", Image = 4384402990})
 		end
 	end
 
@@ -3763,7 +3763,7 @@ if useStudio then
 	-- Feel free to place your own script here to see how it'd work in Roblox Studio before running it on your execution software.
 
 
-	--local Window = RayfieldLibrary:CreateWindow({
+	--local Window = WaffBoxLibrary:CreateWindow({
 	--	Name = "WaffBox Example Window",
 	--	LoadingTitle = "WaffBox Interface Suite",
 	--	Theme = 'Default',
@@ -3833,7 +3833,7 @@ if useStudio then
 	--})
 
 
-	----RayfieldLibrary:Notify({Title = "WaffBox Interface", Content = "Welcome to WaffBox. These - are the brand new notification design for WaffBox, with custom sizing and WaffBox calculated wait times.", Image = 4483362458})
+	----WaffBoxLibrary:Notify({Title = "WaffBox Interface", Content = "Welcome to WaffBox. These - are the brand new notification design for WaffBox, with custom sizing and WaffBox calculated wait times.", Image = 4483362458})
 
 	--local Section = Tab:CreateSection("Section Example")
 
@@ -3891,7 +3891,7 @@ if useStudio then
 	--})
 
 	--local thoptions = {}
-	--for themename, theme in pairs(RayfieldLibrary.Theme) do
+	--for themename, theme in pairs(WaffBoxLibrary.Theme) do
 	--	table.insert(thoptions, themename)
 	--end
 
@@ -3985,7 +3985,7 @@ end
 --end
 
 task.delay(4, function()
-	RayfieldLibrary.LoadConfiguration()
+	WaffBoxLibrary.LoadConfiguration()
 	if Main:FindFirstChild('Notice') and Main.Notice.Visible then
 		TweenService:Create(Main.Notice, TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 100, 0, 25), Position = UDim2.new(0.5, 0, 0, -100), BackgroundTransparency = 1}):Play()
 		TweenService:Create(Main.Notice.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
@@ -3995,4 +3995,4 @@ task.delay(4, function()
 	end
 end)
 
-return RayfieldLibrary
+return WaffBoxLibrary
