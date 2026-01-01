@@ -1680,7 +1680,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 				task.wait(math.random(180, 600))
 				WaffBoxLibrary:Notify({
 					Title = "WaffBox Interface",
-					Content = "Enjoying this UI library? Find it at sirius.menu/discord",
+					Content = "Enjoying this UI library? Find it at waffbox/discord",
 					Duration = 7,
 					Image = 4370033185,
 				})
