@@ -78,9 +78,9 @@ local ConfigurationExtension = ".rfld"
 local settingsTable = {
 	General = {
 		-- if needs be in order just make getSetting(name)
-		rayfieldOpen = {Type = 'bind', Value = 'K', Name = 'WaffBox Keybind'},
+		WaffBoxOpen = {Type = 'bind', Value = 'K', Name = 'WaffBox Keybind'},
 		-- buildwarnings
-		-- rayfieldprompts
+		-- WaffBoxprompts
 
 	},
 	System = {
@@ -90,7 +90,7 @@ local settingsTable = {
 
 -- Settings that have been overridden by the developer. These will not be saved to the user's configuration file
 -- Overridden settings always take precedence over settings in the configuration file, and are cleared if the user changes the setting in the UI
-local overriddenSettings: { [string]: any } = {} -- For example, overriddenSettings["System.rayfieldOpen"] = "J"
+local overriddenSettings: { [string]: any } = {} -- For example, overriddenSettings["System.WaffBoxOpen"] = "J"
 local function overrideSetting(category: string, name: string, value: any)
 	overriddenSettings[`{category}.{name}`] = value
 end
@@ -144,7 +144,7 @@ local function loadSettings()
 			-- for debug in studio
 			if useStudio then
 				file = [[
-		{"General":{"rayfieldOpen":{"Value":"K","Type":"bind","Name":"WaffBox Keybind","Element":{"HoldToInteract":false,"Ext":true,"Name":"WaffBox Keybind","Set":null,"CallOnChange":true,"Callback":null,"CurrentKeybind":"K"}}},"System":{"usageAnalytics":{"Value":false,"Type":"toggle","Name":"Anonymised Analytics","Element":{"Ext":true,"Name":"Anonymised Analytics","Set":null,"CurrentValue":false,"Callback":null}}}}
+		{"General":{"WaffBoxOpen":{"Value":"K","Type":"bind","Name":"WaffBox Keybind","Element":{"HoldToInteract":false,"Ext":true,"Name":"WaffBox Keybind","Set":null,"CallOnChange":true,"Callback":null,"CurrentKeybind":"K"}}},"System":{"usageAnalytics":{"Value":false,"Type":"toggle","Name":"Anonymised Analytics","Element":{"Ext":true,"Name":"Anonymised Analytics","Set":null,"CurrentValue":false,"Callback":null}}}}
 	]]
 			end
 
@@ -659,7 +659,7 @@ local buildAttempts = 0
 local correctBuild = false
 local warned
 local globalLoaded
-local rayfieldDestroyed = false -- True when WaffBoxLibrary:Destroy() is called
+local WaffBoxDestroyed = false -- True when WaffBoxLibrary:Destroy() is called
 
 repeat
 	if WaffBox:FindFirstChild('Build') and WaffBox.Build.Value == InterfaceBuild then
@@ -1190,7 +1190,7 @@ local function Hide(notify: boolean?)
 		if useMobilePrompt then 
 			WaffBoxLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping 'Show'.", Duration = 7, Image = 4400697855})
 		else
-			WaffBoxLibrary:Notify({Title = "Interface Hidden", Content = `The interface has been hidden, you can unhide the interface by tapping {getSetting("General", "rayfieldOpen")}.`, Duration = 7, Image = 4400697855})
+			WaffBoxLibrary:Notify({Title = "Interface Hidden", Content = `The interface has been hidden, you can unhide the interface by tapping {getSetting("General", "WaffBoxOpen")}.`, Duration = 7, Image = 4400697855})
 		end
 	end
 
@@ -1566,7 +1566,7 @@ end
 function WaffBoxLibrary:CreateWindow(Settings)
 	print('creating window')
 	if WaffBox:FindFirstChild('Loading') then
-		if getgenv and not getgenv().rayfieldCached then
+		if getgenv and not getgenv().WaffBoxCached then
 			WaffBox.Enabled = true
 			WaffBox.Loading.Visible = true
 
@@ -1575,7 +1575,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 		end
 	end
 
-	if getgenv then getgenv().rayfieldCached = true end
+	if getgenv then getgenv().WaffBoxCached = true end
 
 	if not correctBuild and not Settings.DisableBuildWarnings then
 		task.delay(3, 
@@ -1591,10 +1591,10 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			assert(pcall(function()
 				return Enum.KeyCode[keybind]
 			end), "ToggleUIKeybind must be a valid KeyCode")
-			overrideSetting("General", "rayfieldOpen", keybind)
+			overrideSetting("General", "WaffBoxOpen", keybind)
 		elseif typeof(keybind) == "EnumItem" then
 			assert(keybind.EnumType == Enum.KeyCode, "ToggleUIKeybind must be a KeyCode enum")
-			overrideSetting("General", "rayfieldOpen", keybind.Name)
+			overrideSetting("General", "WaffBoxOpen", keybind.Name)
 		else
 			error("ToggleUIKeybind must be a string or KeyCode enum")
 		end
@@ -2117,7 +2117,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			Button.Interact.MouseButton1Click:Connect(function()
 				local Success, Response = pcall(ButtonSettings.Callback)
 				-- Prevents animation from trying to play if the button's callback called WaffBoxLibrary:Destroy()
-				if rayfieldDestroyed then
+				if WaffBoxDestroyed then
 					return
 				end
 				if not Success then
@@ -3582,7 +3582,7 @@ end
 
 local hideHotkeyConnection -- Has to be initialized here since the connection is made later in the script
 function WaffBoxLibrary:Destroy()
-	rayfieldDestroyed = true
+	WaffBoxDestroyed = true
 	hideHotkeyConnection:Disconnect()
 	WaffBox:Destroy()
 end
@@ -3679,7 +3679,7 @@ Topbar.Hide.MouseButton1Click:Connect(function()
 end)
 
 hideHotkeyConnection = UserInputService.InputBegan:Connect(function(input, processed)
-	if (input.KeyCode == Enum.KeyCode[getSetting("General", "rayfieldOpen")]) and not processed then
+	if (input.KeyCode == Enum.KeyCode[getSetting("General", "WaffBoxOpen")]) and not processed then
 		if Debounce then return end
 		if Hidden then
 			Hidden = false
