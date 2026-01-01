@@ -205,7 +205,7 @@ if not requestsDisabled then
 	if debugX then
 		warn('Querying Settings for Reporter Information')
 	end	
-	analyticsLib = loadWithTimeout("https://analytics.sirius.menu/script")
+	analyticsLib = loadWithTimeout("")
 	if not analyticsLib then
 		warn("Failed to load analytics reporter")
 		analyticsLib = nil
