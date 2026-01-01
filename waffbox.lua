@@ -3981,7 +3981,7 @@ if CEnabled and Main:FindFirstChild('Notice') then
 end
 -- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA why :(
 --if not useStudio then
---	task.spawn(loadWithTimeout, "https://raw.githubusercontent.com/SiriusSoftwareLtd/Sirius/refs/heads/request/boost.lua")
+--	task.spawn(loadWithTimeout, "")
 --end
 
 task.delay(4, function()
