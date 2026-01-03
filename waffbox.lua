@@ -1,18 +1,19 @@
 --[[
 
-WaffBox Interface Suite
+ArrayField Interface Suite
+by Meta
 
 Original by Sirius
 
 -------------------------------
-Waffbox  | Designing + Programming + New Features
+Arrays  | Designing + Programming + New Features
 
 ]]
 
 local Release = "Release 2A"
 local NotificationDuration = 6.5
-local ArrayFieldFolder = "WaffBox"
-local ConfigurationFolder = WaffBox.."/Configurations"
+local ArrayFieldFolder = "ArrayField"
+local ConfigurationFolder = ArrayFieldFolder.."/Configurations"
 local ConfigurationExtension = ".rfld"
 local ArrayFieldQuality = {}
 
@@ -124,7 +125,7 @@ if game["Run Service"]:IsStudio() then
 end
 
 pcall(function()
-	_G.LastRayField.Name = 'Old Waffbo'
+	_G.LastRayField.Name = 'Old Arrayfield'
 	_G.LastRayField.Enabled = false
 end)
 local ParentObject = function(Gui)
