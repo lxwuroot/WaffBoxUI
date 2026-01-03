@@ -1,27 +1,26 @@
 --[[
 
 WaffBox Interface Suite
-by Meta
 
 Original by Sirius
 
 -------------------------------
-WaffBoxs  | Designing + Programming + New Features
+Waffbox  | Designing + Programming + New Features
 
 ]]
 
 local Release = "Release 2A"
 local NotificationDuration = 6.5
-local WaffBoxFolder = "WaffBox"
-local ConfigurationFolder = WaffBoxFolder.."/Configurations"
+local ArrayFieldFolder = "WaffBox"
+local ConfigurationFolder = WaffBox.."/Configurations"
 local ConfigurationExtension = ".rfld"
-local WaffBoxQuality = {}
+local ArrayFieldQuality = {}
 
-local WaffBoxLibrary = {
+local ArrayFieldLibrary = {
 	Flags = {},
 	Theme = {
 		Default = {
-			TextFont = "Default", -- Default will use the various font faces used across WaffBox
+			TextFont = "Default", -- Default will use the various font faces used across ArrayField
 			TextColor = Color3.fromRGB(240, 240, 240),
 
 			Background = Color3.fromRGB(25, 25, 25),
@@ -60,7 +59,7 @@ local WaffBoxLibrary = {
 			PlaceholderColor = Color3.fromRGB(178, 178, 178)
 		},
 		Light = {
-			TextFont = "Gotham",  -- Default will use the various font faces used across WaffBox
+			TextFont = "Gotham",  -- Default will use the various font faces used across ArrayField
 			TextColor = Color3.fromRGB(50, 50, 50), -- i need to make all text 240, 240, 240 and base gray on transparency not color to do this
 
 			Background = Color3.fromRGB(255, 255, 255),
@@ -114,19 +113,19 @@ local CoreGui = game:GetService("CoreGui")
 local LocalPlayer = game:GetService('Players').LocalPlayer
 
 -- Interface Management
-local WaffBox = game:GetObjects("rbxassetid://13853811008")[1]
-WaffBox.Enabled = false
+local ArrayField = game:GetObjects("rbxassetid://13853811008")[1]
+ArrayField.Enabled = false
 local spawn = task.spawn
 local delay = task.delay
 
 --Studio
 if game["Run Service"]:IsStudio() then
-	function gethui() return WaffBox end local http_request = nil local syn = {protect_gui = false,request = false,}local http = nil function writefile(tt,t,ttt)end function isfolder(t)end function makefolder(t)end function isfile(r)end function readfile(t)end
+	function gethui() return ArrayField end local http_request = nil local syn = {protect_gui = false,request = false,}local http = nil function writefile(tt,t,ttt)end function isfolder(t)end function makefolder(t)end function isfile(r)end function readfile(t)end
 end
 
 pcall(function()
-	_G.LastRay.Name = 'Old WaffBox'
-	_G.LastRay.Enabled = false
+	_G.LastRayField.Name = 'Old Waffbo'
+	_G.LastRayField.Enabled = false
 end)
 local ParentObject = function(Gui)
 	local success, failure = pcall(function()
@@ -143,14 +142,14 @@ local ParentObject = function(Gui)
 	if not success and failure then
 		Gui.Parent = LocalPlayer:FindFirstChildWhichIsA("PlayerGui")
 	end
-	_G.LastRay = WaffBox
+	_G.LastRayField = ArrayField
 end
-ParentObject(WaffBox)
+ParentObject(ArrayField)
 
 --Object Variables
 
 local Camera = workspace.CurrentCamera
-local Main = WaffBox.Main
+local Main = ArrayField.Main
 local Topbar = Main.Topbar
 local Elements = Main.Elements
 local LoadingFrame = Main.LoadingFrame
@@ -161,9 +160,9 @@ local SearchBar = Main.Searchbar
 local Filler = SearchBar.CanvasGroup.Filler
 local Prompt = Main.Prompt
 local NotePrompt = Main.NotePrompt
-local InfoPrompt = WaffBox.Info
+local InfoPrompt = ArrayField.Info
 
-WaffBox.DisplayOrder = 100
+ArrayField.DisplayOrder = 100
 Elements.UIPageLayout.TouchInputEnabled = false
 LoadingFrame.Version.Text = Release
 
@@ -181,13 +180,13 @@ local SideBarClosed = true
 local InfoPromptOpen = false
 local BarType = 'Side'
 local HoverTime = 0.3
-local Notifications = WaffBox.Notifications
+local Notifications = ArrayField.Notifications
 
-local SelectedTheme = WaffBoxLibrary.Theme.Default
+local SelectedTheme = ArrayFieldLibrary.Theme.Default
 
 function ChangeTheme(ThemeName)
-	SelectedTheme = WaffBox.Theme[ThemeName]
-	for _, obj in ipairs(WaffBox:GetDescendants()) do
+	SelectedTheme = ArrayField.Theme[ThemeName]
+	for _, obj in ipairs(ArrayField:GetDescendants()) do
 		if obj.ClassName == "TextLabel" or obj.ClassName == "TextBox" or obj.ClassName == "TextButton" then
 			if SelectedTheme.TextFont ~= "Default" then 
 				obj.TextColor3 = SelectedTheme.TextColor
@@ -196,14 +195,14 @@ function ChangeTheme(ThemeName)
 		end
 	end
 
-	WaffBox.Main.BackgroundColor3 = SelectedTheme.Background
-	WaffBox.Main.Topbar.BackgroundColor3 = SelectedTheme.Topbar
-	WaffBox.Main.Topbar.CornerRepair.BackgroundColor3 = SelectedTheme.Topbar
-	WaffBox.Main.Shadow.Image.ImageColor3 = SelectedTheme.Shadow
+	ArrayField.Main.BackgroundColor3 = SelectedTheme.Background
+	ArrayField.Main.Topbar.BackgroundColor3 = SelectedTheme.Topbar
+	ArrayField.Main.Topbar.CornerRepair.BackgroundColor3 = SelectedTheme.Topbar
+	ArrayField.Main.Shadow.Image.ImageColor3 = SelectedTheme.Shadow
 
-	WaffBox.Main.Topbar.ChangeSize.ImageColor3 = SelectedTheme.TextColor
-	WaffBox.Main.Topbar.Hide.ImageColor3 = SelectedTheme.TextColor
-	WaffBox.Main.Topbar.Theme.ImageColor3 = SelectedTheme.TextColor
+	ArrayField.Main.Topbar.ChangeSize.ImageColor3 = SelectedTheme.TextColor
+	ArrayField.Main.Topbar.Hide.ImageColor3 = SelectedTheme.TextColor
+	ArrayField.Main.Topbar.Theme.ImageColor3 = SelectedTheme.TextColor
 
 	for _, TabPage in ipairs(Elements:GetChildren()) do
 		for _, Element in ipairs(TabPage:GetChildren()) do
@@ -341,16 +340,16 @@ end
 local function LoadConfiguration(Configuration)
 	local Data = HttpService:JSONDecode(Configuration)
 	for FlagName, FlagValue in next, Data do
-		if WaffBoxLibrary.Flags[FlagName] then
+		if ArrayFieldLibrary.Flags[FlagName] then
 			spawn(function() 
-				if WaffBoxLibrary.Flags[FlagName].Type == "ColorPicker" then
-					WaffBoxLibrary.Flags[FlagName]:Set(UnpackColor(FlagValue))
+				if ArrayFieldLibrary.Flags[FlagName].Type == "ColorPicker" then
+					ArrayFieldLibrary.Flags[FlagName]:Set(UnpackColor(FlagValue))
 				else
-					if WaffBoxLibrary.Flags[FlagName].CurrentValue or WaffBoxLibrary.Flags[FlagName].CurrentKeybind or WaffBoxLibrary.Flags[FlagName].CurrentOption or WaffBoxLibrary.Flags[FlagName].Color ~= FlagValue then WaffBoxLibrary.Flags[FlagName]:Set(FlagValue) end
+					if ArrayFieldLibrary.Flags[FlagName].CurrentValue or ArrayFieldLibrary.Flags[FlagName].CurrentKeybind or ArrayFieldLibrary.Flags[FlagName].CurrentOption or ArrayFieldLibrary.Flags[FlagName].Color ~= FlagValue then ArrayFieldLibrary.Flags[FlagName]:Set(FlagValue) end
 				end    
 			end)
 		else
-			WaffBoxLibrary:Notify({Title = "Flag Error", Content = "WaffBox was unable to find '"..FlagName.. "'' in the current script"})
+			ArrayFieldLibrary:Notify({Title = "Flag Error", Content = "ArrayField was unable to find '"..FlagName.. "'' in the current script"})
 		end
 	end
 end
@@ -358,7 +357,7 @@ end
 local function SaveConfiguration()
 	if not CEnabled then return end
 	local Data = {}
-	for i,v in pairs(WaffBoxLibrary.Flags) do
+	for i,v in pairs(ArrayFieldLibrary.Flags) do
 		if v.Type == "ColorPicker" then
 			Data[i] = PackColor(v.Color)
 		else
@@ -678,7 +677,7 @@ function ClosePrompt()
 	wait(.5)
 	Prompt.Visible = false
 end
-function WaffBoxLibrary:Notify(NotificationSettings)
+function ArrayFieldLibrary:Notify(NotificationSettings)
 	spawn(function()
 		local ActionCompleted = true
 		local Notification = Notifications.Template:Clone()
@@ -689,7 +688,7 @@ function WaffBoxLibrary:Notify(NotificationSettings)
 
 		local blurlight = nil
 		if not false then
-			blurlight = Instance.new("DepthOfEffect",game:GetService("Lighting"))
+			blurlight = Instance.new("DepthOfFieldEffect",game:GetService("Lighting"))
 			blurlight.Enabled = true
 			blurlight.FarIntensity = 0
 			blurlight.FocusDistance = 51.6
@@ -706,7 +705,7 @@ function WaffBoxLibrary:Notify(NotificationSettings)
 				local NewAction = Notification.Actions.Template:Clone()
 				NewAction.Active = false
 				NewAction.BackgroundColor3 = SelectedTheme.NotificationActionsBackground
-				if SelectedTheme ~= WaffBoxLibrary.Theme.Default then
+				if SelectedTheme ~= ArrayFieldLibrary.Theme.Default then
 					NewAction.TextColor3 = SelectedTheme.TextColor
 				end
 				NewAction.Name = Action.Name
@@ -720,7 +719,7 @@ function WaffBoxLibrary:Notify(NotificationSettings)
 				NewAction.MouseButton1Click:Connect(function()
 					local Success, Response = pcall(Action.Callback)
 					if not Success then
-						print("WaffBox | Action: "..Action.Name.." Callback Error " ..tostring(Response))
+						print("ArrayField | Action: "..Action.Name.." Callback Error " ..tostring(Response))
 					end
 					ActionCompleted = true
 				end)
@@ -777,7 +776,7 @@ function WaffBoxLibrary:Notify(NotificationSettings)
 			end
 		end
 
-		if WaffBox.Name == "WaffBox" then
+		if ArrayField.Name == "ArrayField" then
 			neon:BindFrame(Notification.BlurModule, {
 				Transparency = 0.98;
 				BrickColor = BrickColor.new("Institutional white");
@@ -832,7 +831,7 @@ function WaffBoxLibrary:Notify(NotificationSettings)
 	end)
 end
 
-WaffBoxLibrary:Notify({Title = "Modified by Hosvile", Content = "Want more scripts that has been modified to support mobile? Check out my YouTube Channel Hosvile", Duration = 7})
+ArrayFieldLibrary:Notify({Title = "Modified by Hosvile", Content = "Want more scripts that has been modified to support mobile? Check out my YouTube Channel Hosvile", Duration = 7})
 
 function CloseSideBar()
 	Debounce = true
@@ -862,7 +861,7 @@ function Hide()
 	Debounce = true
 	if not hasHidden then
 		hasHidden = true
-		WaffBoxLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping RightShift", Duration = 10})
+		ArrayFieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping RightShift", Duration = 10})
 		--delay(60, function() hasHidden = false end)
 	end
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 400)}):Play()
@@ -1210,8 +1209,8 @@ function Minimise()
 end
 
 local KeyMainUI
-function WaffBoxLibrary:CreateWindow(Settings)
-	WaffBox.Enabled = false
+function ArrayFieldLibrary:CreateWindow(Settings)
+	ArrayField.Enabled = false
 	local Passthrough = false
 	Topbar.Title.Text = Settings.Name
 	Main.Size = UDim2.new(0, 450, 0, 260)
@@ -1221,10 +1220,10 @@ function WaffBoxLibrary:CreateWindow(Settings)
 	LoadingFrame.Subtitle.TextTransparency = 1
 	Main.Shadow.Image.ImageTransparency = 1
 	LoadingFrame.Version.TextTransparency = 1
-	LoadingFrame.Title.Text = Settings.LoadingTitle or "WaffBox Interface Suite"
+	LoadingFrame.Title.Text = Settings.LoadingTitle or "Arrayfield Interface Suite"
 	LoadingFrame.Subtitle.Text = Settings.LoadingSubtitle or "by Sirius | Meta"
-	if Settings.LoadingTitle ~= "WaffBox Interface Suite" then
-		LoadingFrame.Version.Text = "WaffBox UI"
+	if Settings.LoadingTitle ~= "Arrayfield Interface Suite" then
+		LoadingFrame.Version.Text = "Arrayfield UI"
 	end
 	Topbar.Visible = false
 	Elements.Visible = false
@@ -1235,7 +1234,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 		if not Settings.ConfigurationSaving.FileName then
 			Settings.ConfigurationSaving.FileName = tostring(game.PlaceId)
 		end
-		if not isfolder(WaffBoxLibrary.."/".."Configuration Folders") then
+		if not isfolder(ArrayFieldLibrary.."/".."Configuration Folders") then
 
 		end
 		if Settings.ConfigurationSaving.Enabled == nil then
@@ -1267,10 +1266,10 @@ function WaffBoxLibrary:CreateWindow(Settings)
 	end
 
 	if Settings.Discord then
-		if not isfolder(WaffBoxFolder.."/Discord Invites") then
-			makefolder(WaffBoxFolder.."/Discord Invites")
+		if not isfolder(ArrayFieldFolder.."/Discord Invites") then
+			makefolder(ArrayFieldFolder.."/Discord Invites")
 		end
-		if not isfile(WaffBoxFolder.."/Discord Invites".."/"..Settings.Discord.Invite..ConfigurationExtension) then
+		if not isfile(ArrayFieldFolder.."/Discord Invites".."/"..Settings.Discord.Invite..ConfigurationExtension) then
 			if request and not (identifyexecutor and identifyexecutor():lower():match("arceus x")) then
 				request({
 					Url = 'http://127.0.0.1:6463/rpc?v=1',
@@ -1288,7 +1287,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			end
 			
 			if Settings.Discord.RememberJoins then -- We do logic this way so if the developer changes this setting, the user still won't be prompted, only new users
-				writefile(WaffBoxFolder.."/Discord Invites".."/"..Settings.Discord.Invite..ConfigurationExtension,"WaffBox RememberJoins is true for this invite, this invite will not ask you to join again")
+				writefile(ArrayFieldFolder.."/Discord Invites".."/"..Settings.Discord.Invite..ConfigurationExtension,"ArrayField RememberJoins is true for this invite, this invite will not ask you to join again")
 			end
 		else
 
@@ -1301,8 +1300,8 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			return
 		end
 
-		if not isfolder(WaffBoxFolder.."/Key System") then
-			makefolder(WaffBoxFolder.."/Key System")
+		if not isfolder(ArrayFieldFolder.."/Key System") then
+			makefolder(ArrayFieldFolder.."/Key System")
 		end
 
 		if Settings.KeySettings.GrabKeyFromSite then
@@ -1312,7 +1311,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 					Settings.KeySettings.Key[i] = string.gsub(Settings.KeySettings.Key[i], " ", "")
 				end)
 				if not Success then
-					print("WaffBox | "..Key.." Error " ..tostring(Response))
+					print("ArrayField | "..Key.." Error " ..tostring(Response))
 				end
 			end
 		end
@@ -1321,15 +1320,15 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			Settings.KeySettings.FileName = "No file name specified"
 		end
 
-		if isfile(WaffBoxFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension) then
-			if readfile(WaffBoxFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension) == Settings.KeySettings.Key then
+		if isfile(ArrayFieldFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension) then
+			if readfile(ArrayFieldFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension) == Settings.KeySettings.Key then
 				Passthrough = true
 			end
 		end
 
 		if not Passthrough then
 			local AttemptsRemaining = math.random(2,6)
-			WaffBox.Enabled = false
+			ArrayField.Enabled = false
 			local KeyUI = game:GetObjects("rbxassetid://11695805160")[1]
 			KeyUI.Enabled = true
 			pcall(function()
@@ -1439,9 +1438,9 @@ function WaffBoxLibrary:CreateWindow(Settings)
 					Passthrough = true
 					if Settings.KeySettings.SaveKey then
 						if writefile then
-							writefile(WaffBoxFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension, Settings.KeySettings.Key)
+							writefile(ArrayFieldFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension, Settings.KeySettings.Key)
 						end
-						WaffBoxLibrary:Notify({Title = "Key System", Content = "The key for this script has been saved successfully"})
+						ArrayFieldLibrary:Notify({Title = "Key System", Content = "The key for this script has been saved successfully"})
 					end
 				else
 					if AttemptsRemaining == 0 then
@@ -1503,7 +1502,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 				TweenService:Create(KeyMain.Hide, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
 				TweenService:Create(KeyMain.HideP, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
 				wait(0.51)
-				WaffBoxLibrary:Destroy()
+				ArrayFieldLibrary:Destroy()
 				KeyUI:Destroy()
 			end)
 		else
@@ -1513,7 +1512,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 	if Settings.KeySystem then
 		repeat wait() until Passthrough
 	end
-	WaffBox.Enabled = true
+	ArrayField.Enabled = true
 	for _,tabbtn in pairs(SideList:GetChildren()) do
 		if tabbtn.ClassName == "Frame" and tabbtn.Name ~= "Placeholder" then
 			TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint),{TextTransparency = 1}):Play()
@@ -1526,7 +1525,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 	--delay(4,function()
 	--	qNotePrompt({
 	--		Title = 'Preview',
-	--		Description = 'This is a preview for the official WaffBox forum post. Remember that things are subject to change.',
+	--		Description = 'This is a preview for the official ArrayField forum post. Remember that things are subject to change.',
 
 	--	})
 	--end)
@@ -1568,8 +1567,8 @@ function WaffBoxLibrary:CreateWindow(Settings)
 
 	-- Tab
 	local FirstTab = false
-	WaffBoxQuality.Window = {Tabs = {}}
-	local Window = WaffBoxQuality.Window
+	ArrayFieldQuality.Window = {Tabs = {}}
+	local Window = ArrayFieldQuality.Window
 	function Window:CreateTab(Name,Image)
 		Window.Tabs[Name]={Elements = {}}
 		local Tab = Window.Tabs[Name]
@@ -1632,7 +1631,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			Elements.UIPageLayout.Animated = true
 		end
 
-		if SelectedTheme ~= WaffBoxLibrary.Theme.Default then
+		if SelectedTheme ~= ArrayFieldLibrary.Theme.Default then
 			TopTabButton.Shadow.Visible = false
 		end
 		TopTabButton.UIStroke.Color = SelectedTheme.TabStroke
@@ -1745,7 +1744,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 					TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
 					TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 					Button.Title.Text = "Callback Error"
-					print("WaffBox | "..ButtonSettings.Name.." Callback Error " ..tostring(Response))
+					print("ArrayField | "..ButtonSettings.Name.." Callback Error " ..tostring(Response))
 					wait(0.5)
 					Button.Title.Text = ButtonSettings.Name
 					TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
@@ -1811,7 +1810,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 		function Tab:CreateSection(SectionName,Display)
 
 			local SectionValue = {
-				Holder = WaffBox.Holding,
+				Holder = ArrayField.Holding,
 				Open = true
 			}
 			local Debounce = false
@@ -1838,7 +1837,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 				Section._UIPadding_:Destroy()
 				Section.Holder.Visible = false
 				Section.BackgroundTransparency = 1
-				SectionValue.Holder.Parent = WaffBox.Holding
+				SectionValue.Holder.Parent = ArrayField.Holding
 				Section.Title.ImageButton.Visible = false
 			end
 			Section.Title.ImageButton.MouseButton1Down:Connect(function()
@@ -2070,7 +2069,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 					TweenService:Create(Input, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
 					TweenService:Create(Input.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 					Input.Title.Text = "Callback Error"
-					print("WaffBox | "..InputSettings.Name.." Callback Error " ..tostring(Response))
+					print("ArrayField | "..InputSettings.Name.." Callback Error " ..tostring(Response))
 					wait(0.5)
 					Input.Title.Text = InputSettings.Name
 					TweenService:Create(Input, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
@@ -2339,7 +2338,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 						end)
 						if not Success then
 							Error('Callback Error')
-							print("WaffBox | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
+							print("ArrayField | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
 						end
 						RefreshSelected()
 						TweenService:Create(DropdownOption, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
@@ -2365,7 +2364,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 					end)
 					if not Success then
 						Error('Callback Error')
-						print("WaffBox | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
+						print("ArrayField | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
 					end
 
 					OptionInTable.Selected = true
@@ -2411,7 +2410,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 				end
 				if Settings.ConfigurationSaving then
 					if Settings.ConfigurationSaving.Enabled and DropdownSettings.Flag then
-						WaffBoxLibrary.Flags[DropdownSettings.Flag] = DropdownSettings
+						ArrayFieldLibrary.Flags[DropdownSettings.Flag] = DropdownSettings
 					end
 				end
 			end
@@ -2445,7 +2444,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 						TweenService:Create(Dropdown, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
 						TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 						Dropdown.Title.Text = "Callback Error"
-						print("WaffBox | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
+						print("ArrayField | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
 						wait(0.5)
 						Dropdown.Title.Text = DropdownSettings.Name
 						TweenService:Create(Dropdown, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
@@ -2481,7 +2480,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 				end)
 				if not Success then
 					Error('Callback Error')
-					print("WaffBox | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
+					print("ArrayField | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
 				end
 				for _, option in ipairs(Dropdown.List:GetChildren()) do
 					if option.ClassName == "Frame" and option ~= SearchBar and option.Name ~= "Placeholder" then
@@ -2631,7 +2630,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 							TweenService:Create(Keybind, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
 							TweenService:Create(Keybind.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 							Keybind.Title.Text = "Callback Error"
-							print("WaffBox | "..KeybindSettings.Name.." Callback Error " ..tostring(Response))
+							print("ArrayField | "..KeybindSettings.Name.." Callback Error " ..tostring(Response))
 							wait(0.5)
 							Keybind.Title.Text = KeybindSettings.Name
 							TweenService:Create(Keybind, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
@@ -2690,7 +2689,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			end
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and KeybindSettings.Flag then
-					WaffBoxLibrary.Flags[KeybindSettings.Flag] = KeybindSettings
+					ArrayFieldLibrary.Flags[KeybindSettings.Flag] = KeybindSettings
 				end
 			end
 			return KeybindSettings
@@ -2719,7 +2718,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			else
 				Toggle.Parent = TabPage
 			end
-			if SelectedTheme ~= WaffBoxLibrary.Theme.Default then
+			if SelectedTheme ~= ArrayFieldLibrary.Theme.Default then
 				Toggle.Switch.Shadow.Visible = false
 			end
 			ToggleSettings.Locked = false
@@ -2786,7 +2785,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 					TweenService:Create(Toggle, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
 					TweenService:Create(Toggle.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 					Toggle.Title.Text = "Callback Error"
-					print("WaffBox | "..ToggleSettings.Name.." Callback Error " ..tostring(Response))
+					print("ArrayField | "..ToggleSettings.Name.." Callback Error " ..tostring(Response))
 					wait(0.5)
 					Toggle.Title.Text = ToggleSettings.Name
 					TweenService:Create(Toggle, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
@@ -2832,7 +2831,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 					TweenService:Create(Toggle, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
 					TweenService:Create(Toggle.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 					Toggle.Title.Text = "Callback Error"
-					print("WaffBox | "..ToggleSettings.Name.." Callback Error " ..tostring(Response))
+					print("ArrayField | "..ToggleSettings.Name.." Callback Error " ..tostring(Response))
 					wait(0.5)
 					Toggle.Title.Text = ToggleSettings.Name
 					TweenService:Create(Toggle, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
@@ -2868,7 +2867,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and ToggleSettings.Flag then
-					WaffBoxLibrary.Flags[ToggleSettings.Flag] = ToggleSettings
+					ArrayFieldLibrary.Flags[ToggleSettings.Flag] = ToggleSettings
 				end
 			end
 
@@ -3110,7 +3109,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and ColorPickerSettings.Flag then
-					WaffBoxLibrary.Flags[ColorPickerSettings.Flag] = ColorPickerSettings
+					ArrayFieldLibrary.Flags[ColorPickerSettings.Flag] = ColorPickerSettings
 				end
 			end
 
@@ -3185,7 +3184,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			Slider.UIStroke.Transparency = 1
 			Slider.Title.TextTransparency = 1
 
-			if SelectedTheme ~= WaffBoxLibrary.Theme.Default then
+			if SelectedTheme ~= ArrayFieldLibrary.Theme.Default then
 				Slider.Main.Shadow.Visible = false
 			end
 
@@ -3260,7 +3259,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 						TweenService:Create(Slider, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
 						TweenService:Create(Slider.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 						Slider.Title.Text = "Callback Error"
-						print("WaffBox | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
+						print("ArrayField | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
 						wait(0.5)
 						Slider.Title.Text = SliderSettings.Name
 						TweenService:Create(Slider, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
@@ -3312,7 +3311,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 					TweenService:Create(Slider, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
 					TweenService:Create(Slider.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 					Slider.Title.Text = "Callback Error"
-					print("WaffBox | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
+					print("ArrayField | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
 					wait(0.5)
 					Slider.Title.Text = SliderSettings.Name
 					TweenService:Create(Slider, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
@@ -3348,7 +3347,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 			end
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and SliderSettings.Flag then
-					WaffBoxLibrary.Flags[SliderSettings.Flag] = SliderSettings
+					ArrayFieldLibrary.Flags[SliderSettings.Flag] = SliderSettings
 				end
 			end
 			return SliderSettings
@@ -3422,7 +3421,7 @@ function WaffBoxLibrary:CreateWindow(Settings)
 						clicked = true
 						if not Success then
 							ClosePrompt()
-							print("WaffBox | "..info.Name.." Callback Error " ..tostring(Response))
+							print("ArrayField | "..info.Name.." Callback Error " ..tostring(Response))
 						else
 							ClosePrompt()
 						end
@@ -3507,7 +3506,7 @@ end)
 --[[
 local ContextActionService = game:GetService("ContextActionService")
 
-ContextActionService:BindAction("",function(name,inputState,inputObject)
+ContextActionService:BindAction("Field",function(name,inputState,inputObject)
 	if Debounce then return end
 	if Hidden then
 		Hidden = false
@@ -3520,11 +3519,11 @@ ContextActionService:BindAction("",function(name,inputState,inputObject)
 end,true)
 --]]
 
-local Screen = Instance.new("ScreenGui")
-Screen.DisplayOrder = 100
-Screen.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
-Screen.Name = "Uni" .. tostring(math.random(1000,9999))
-Screen.Parent = gethui and gethui() or game:GetService("CoreGui")
+local FieldScreen = Instance.new("ScreenGui")
+FieldScreen.DisplayOrder = 100
+FieldScreen.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
+FieldScreen.Name = "Uni" .. tostring(math.random(1000,9999))
+FieldScreen.Parent = gethui and gethui() or game:GetService("CoreGui")
 
 local UniButton = Instance.new("ImageLabel")
 UniButton.Name = "UniButton"
@@ -3537,7 +3536,7 @@ UniButton.BorderSizePixel = 0
 UniButton.BackgroundTransparency = 1
 UniButton.Size = UDim2.new(0, 42, 0, 42)
 UniButton.SizeConstraint = Enum.SizeConstraint.RelativeXY
-UniButton.Parent = Screen
+UniButton.Parent = FieldScreen
 
 local UniBoxButton = Instance.new("TextButton")
 UniBoxButton.Name = "UniBoxButton"
@@ -3552,11 +3551,11 @@ UniBoxButton.Text = ""
 UniBoxButton.SizeConstraint = Enum.SizeConstraint.RelativeXY
 UniBoxButton.Parent = UniButton
 
-WaffBoxLibrary.UniButton = UniButton
+ArrayFieldLibrary.UniButton = UniButton
 
-function WaffBoxLibrary:Destroy()
-	WaffBox:Destroy()
-	Screen:Destroy()
+function ArrayFieldLibrary:Destroy()
+	ArrayField:Destroy()
+	FieldScreen:Destroy()
 	if KeyMainUI then KeyMainUI:Destroy() end
 	if KeyUI then KeyUI:Destroy() end
 end
@@ -3576,13 +3575,13 @@ end
 UniBoxButton.MouseButton1Click:Connect(UniButtonClicked)
 
 --[[
-local  = ContextActionService:GetButton("")
-.Active = true
-.Parent.Parent = Screen
-.ActionTitle.Text = "WaffBox"
-.AnchorPoint = Vector2.new(1,1)
-.ZIndex = 10
-.Position = UDim2.new(0.95,0,0.95,0)
+local Field = ContextActionService:GetButton("Field")
+Field.Active = true
+Field.Parent.Parent = FieldScreen
+Field.ActionTitle.Text = "ArrayField"
+Field.AnchorPoint = Vector2.new(1,1)
+Field.ZIndex = 10
+Field.Position = UDim2.new(0.95,0,0.95,0)
 --]]
 
 UserInputService.InputBegan:Connect(function(input, processed)
@@ -3623,29 +3622,29 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 end
 
 
-function WaffBoxLibrary:LoadConfiguration()
+function ArrayFieldLibrary:LoadConfiguration()
 	if CEnabled then
 		pcall(function()
 			if isfile(ConfigurationFolder .. "/" .. CFileName .. ConfigurationExtension) then
 				LoadConfiguration(readfile(ConfigurationFolder .. "/" .. CFileName .. ConfigurationExtension))
-				WaffBoxLibrary:Notify({Title = "Configuration Loaded", Content = "The configuration file for this script has been loaded from a previous session"})
+				ArrayFieldLibrary:Notify({Title = "Configuration Loaded", Content = "The configuration file for this script has been loaded from a previous session"})
 			end
 		end)
 	end
 end
-task.delay(9, WaffBoxLibrary.LoadConfiguration, WaffBoxLibrary)
+task.delay(9, ArrayFieldLibrary.LoadConfiguration, ArrayFieldLibrary)
 
-local WaffBox = WaffBoxLibrary
+local ArrayField = ArrayFieldLibrary
 
 --[[
-local Window = WaffBox:CreateWindow({
-        Name = "WaffBox Example Window",
-        LoadingTitle = "WaffBox Interface Suite",
-        LoadingSubtitle = "by WaffBoxs",
+local Window = ArrayField:CreateWindow({
+        Name = "ArrayField Example Window",
+        LoadingTitle = "ArrayField Interface Suite",
+        LoadingSubtitle = "by Arrays",
         ConfigurationSaving = {
             Enabled = true,
             FolderName = nil, -- Create a custom folder for your hub/game
-            FileName = "WaffBox"
+            FileName = "ArrayField"
         },
         Discord = {
             Enabled = false,
@@ -3654,12 +3653,12 @@ local Window = WaffBox:CreateWindow({
         },
         KeySystem = true, -- Set this to true to use our key system
         KeySettings = {
-            Title = "WaffBox",
+            Title = "ArrayField",
             Subtitle = "Key System",
             Note = "Join the discord (discord.gg/sirius)",
-            FileName = "WaffBoxsKeys",
+            FileName = "ArrayFieldsKeys",
             SaveKey = false,
-            GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like WaffBox to get the key from
+            GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like ArrayField to get the key from
             Key = {"Hello",'Bye'},
             Actions = {
                 [1] = {
@@ -3807,7 +3806,7 @@ local Window = WaffBox:CreateWindow({
             print(Option)
         end,
     })
-    local Label = Tab:CreateLabel("Thanks for using WaffBox, there were alot of issues but here we are!",Section)
+    local Label = Tab:CreateLabel("Thanks for using Arrayfield, there were alot of issues but here we are!",Section)
     local Paragraph = Tab:CreateParagraph({Title = "Paragraph Example", Content = "Paragraph Example"},Section)
     local Sets = Tab:CreateSection('Set Functions',false)
     local SButton
@@ -3897,4 +3896,4 @@ local Window = WaffBox:CreateWindow({
     })
 --]]
 
-return WaffBoxLibrary
+return ArrayFieldLibrary
